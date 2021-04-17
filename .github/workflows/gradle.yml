@@ -25,5 +25,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build
       run: ./gradlew build
+      env:
+        USE_OFFICIAL_MAPPINGS: true
     - name: Run Server Test
       run: ./gradlew runServerTest
+      env:
+        USE_OFFICIAL_MAPPINGS: true
