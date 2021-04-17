@@ -1,0 +1,107 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+plugins {
+    id 'idea'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+
+def mappingsOfficial = (project.hasProperty('use_official_mappings') && Boolean.valueOf(use_official_mappings)) ||
+        System.getenv("USE_OFFICIAL_MAPPINGS") != null || // Detect in an actions buildscript
+        System.getenv("JITPACK") != null // Detect in a jitpack publishing environment
+def mappingsChannel = mappingsOfficial ? 'official' : 'snapshot'
+def mappingsVersion = mappingsOfficial ? minecraft_version : mappings_version
+
+println 'Using mappings: ' + mappingsChannel + ' / ' + mappingsVersion
+
+if (System.getenv('VERSION') != null) {
+    version = System.getenv('VERSION')
+} else {
+    version = 'dev'
+}
+
+group = 'com.alcatrazescapee.mcjunitlib_example_mod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "${mod_id}"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+minecraft {
+    mappings channel: mappingsChannel, version: mappingsVersion
+    
+    def testClasses = String.join(File.pathSeparator, "${mod_id}%%${sourceSets.main.output.resourcesDir}", "${mod_id}%%${sourceSets.main.output.classesDirs.asPath}", "${mod_id}%%${sourceSets.test.output.resourcesDir}", "${mod_id}%%${sourceSets.test.output.classesDirs.asPath}")
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                mcjunitlib_example_mod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            arg '--nogui'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                mcjunitlib_example_mod {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        serverTest {
+            parent runs.server // This run config inherits settings from the server config
+            workingDirectory project.file('run')
+            main 'com.alcatrazescapee.mcjunitlib.DedicatedTestServerLauncher' // The main class which launches a customized server which then runs JUnit tests
+            ideaModule "${project.name}.test" // Tell IDEA to use the classpath of the test module
+            property 'forge.logging.console.level', 'debug' // This logging level prevents any other server information messages and leaves only the unit test output
+            environment 'MOD_CLASSES', testClasses
+            environment 'target', 'fmltestserver' // This is a custom service used to launch with ModLauncher's transforming class loader
+            arg '--crashOnFailedTests'
+            mods {
+                mcjunitlib_example_mod {
+                    sources sourceSets.main, sourceSets.test
+                }
+            }
+        }
+
+        serverTestDebug {
+            parent runs.server // This run config inherits settings from the server config
+            workingDirectory project.file('run')
+            main 'com.alcatrazescapee.mcjunitlib.DedicatedTestServerLauncher' // The main class which launches a customized server which then runs JUnit tests
+            ideaModule "${project.name}.test" // Tell IDEA to use the classpath of the test module
+            property 'forge.logging.console.level', 'debug' // This logging level prevents any other server information messages and leaves only the unit test output
+            environment 'MOD_CLASSES', testClasses
+            environment 'target', 'fmltestserver' // This is a custom service used to launch with ModLauncher's transforming class loader
+            mods {
+                mcjunitlib_example_mod {
+                    sources sourceSets.main, sourceSets.test
+                }
+            }
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    testImplementation fg.deobf("com.github.alcatrazEscapee:mcjunitlib:1.16.x-SNAPSHOT")
+}

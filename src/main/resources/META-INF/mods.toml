@@ -1,0 +1,27 @@
+# Loader metadata
+modLoader = "javafml" # mandatory
+loaderVersion = "[35,)" # mandatory
+license = "MIT"
+
+# TFC
+[[mods]]
+    modId = "mcjunitlib_example_mod" # mandatory
+    version = "${file.jarVersion}" #mandatory
+    displayName = "mcjunitlib test mod" #mandatory
+    authors = "AlcatrazEscapee" #optional
+    description = "Test Mod for mcjunitlib"
+
+# dependencies
+[[dependencies.mcjunitlib_example_mod]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[36.0.4,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+[[dependencies.mcjunitlib_example_mod]]
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.16.5,)"
+    ordering = "AFTER"
+    side = "BOTH"
