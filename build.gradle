@@ -67,7 +67,7 @@ minecraft {
             workingDirectory project.file('run')
             main 'com.alcatrazescapee.mcjunitlib.DedicatedTestServerLauncher' // The main class which launches a customized server which then runs JUnit tests
             ideaModule "${project.name}.test" // Tell IDEA to use the classpath of the test module
-            property 'forge.logging.console.level', 'debug' // This logging level prevents any other server information messages and leaves only the unit test output
+            property 'forge.logging.console.level', 'unittest' // This logging level prevents any other server information messages and leaves only the unit test output
             environment 'MOD_CLASSES', testClasses
             environment 'target', 'fmltestserver' // This is a custom service used to launch with ModLauncher's transforming class loader
             arg '--crashOnFailedTests'
@@ -103,5 +103,5 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    testImplementation fg.deobf("com.github.alcatrazEscapee:mcjunitlib:1.16.x-SNAPSHOT")
+    testImplementation fg.deobf("com.github.alcatrazEscapee:mcjunitlib:${mcjunitlib_version}-${minecraft_version}")
 }
