@@ -21,6 +21,6 @@ public class IntegrationTests
     @IntegrationTest("test_repeater_locking")
     public void testRepeaterLockingNoButton(IntegrationTestHelper helper)
     {
-        // helper.assertBlockAt(new BlockPos(4, 1, 4), state -> state == Blocks.REDSTONE_LAMP.defaultBlockState().setValue(RedstoneLampBlock.LIT, true), "Lamp should be lit");
+        helper.assertBlockAt(new BlockPos(4, 1, 4), state -> state == Blocks.REDSTONE_LAMP.defaultBlockState().setValue(RedstoneLampBlock.LIT, true), "Lamp should be lit");
     }
 }
