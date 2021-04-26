@@ -5,11 +5,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
     }
 }
 plugins {
     id 'idea'
+    id 'java'
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -31,7 +32,7 @@ if (System.getenv('VERSION') != null) {
 group = 'com.alcatrazescapee.mcjunitlib_example_mod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${mod_id}"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = JavaVersion.VERSION_1_8 // Need this here so eclipse task generates correctly.
 
 minecraft {
     mappings channel: mappingsChannel, version: mappingsVersion
@@ -71,6 +72,7 @@ minecraft {
             environment 'MOD_CLASSES', testClasses
             environment 'target', 'fmltestserver' // This is a custom service used to launch with ModLauncher's transforming class loader
             arg '--crashOnFailedTests'
+            forceExit = false
             mods {
                 mcjunitlib_example_mod {
                     sources sourceSets.main, sourceSets.test
