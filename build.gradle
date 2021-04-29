@@ -71,23 +71,9 @@ minecraft {
             property 'forge.logging.console.level', 'unittest' // This logging level prevents any other server information messages and leaves only the unit test output
             environment 'MOD_CLASSES', testClasses
             environment 'target', 'fmltestserver' // This is a custom service used to launch with ModLauncher's transforming class loader
+            environment 'targetModId', "${mod_id}"
             arg '--crashOnFailedTests'
-            forceExit = false
-            mods {
-                mcjunitlib_example_mod {
-                    sources sourceSets.main, sourceSets.test
-                }
-            }
-        }
-
-        serverTestDebug {
-            parent runs.server // This run config inherits settings from the server config
-            workingDirectory project.file('run')
-            main 'com.alcatrazescapee.mcjunitlib.DedicatedTestServerLauncher' // The main class which launches a customized server which then runs JUnit tests
-            ideaModule "${project.name}.test" // Tell IDEA to use the classpath of the test module
-            property 'forge.logging.console.level', 'debug' // This logging level prevents any other server information messages and leaves only the unit test output
-            environment 'MOD_CLASSES', testClasses
-            environment 'target', 'fmltestserver' // This is a custom service used to launch with ModLauncher's transforming class loader
+            forceExit false
             mods {
                 mcjunitlib_example_mod {
                     sources sourceSets.main, sourceSets.test

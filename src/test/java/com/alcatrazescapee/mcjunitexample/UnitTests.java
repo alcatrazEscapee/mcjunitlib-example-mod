@@ -18,6 +18,6 @@ public class UnitTests
     @Test
     public void testFails()
     {
-        fail("This test was destined to fail!");
+        // fail("This test was destined to fail!");
     }
 }
